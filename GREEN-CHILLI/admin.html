@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101510">
+
+    <title>GREEN CHILLI | Admin Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="admin.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="admin.js" defer></script>
+</head>
+
+<body>
+
+    <!-- LOGIN SECTION -->
+    <section id="loginSection" class="login-section">
+
+        <div class="login-card">
+
+            <div class="admin-logo">🌶️</div>
+
+            <h1>GREEN <span>CHILLI</span></h1>
+            <p class="login-subtitle">Restaurant Admin Panel</p>
+
+            <form id="loginForm">
+
+                <label for="adminEmail">Admin Email</label>
+                <input
+                    type="email"
+                    id="adminEmail"
+                    placeholder="Enter admin email"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="adminPassword">Password</label>
+                <input
+                    type="password"
+                    id="adminPassword"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button type="submit" id="loginButton">
+                    Login to Dashboard →
+                </button>
+
+                <p id="loginMessage" class="message"></p>
+
+            </form>
+
+            <a href="index.html" class="back-link">← Back to Website</a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ADMIN DASHBOARD -->
+    <section id="dashboardSection" class="dashboard-section hidden">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="sidebar-logo">
+                🌶️ GREEN <strong>CHILLI</strong>
+            </div>
+
+            <p class="sidebar-label">MAIN MENU</p>
+
+            <button class="sidebar-link active" data-page="overview">
+                📊 Dashboard
+            </button>
+
+            <button class="sidebar-link" data-page="products">
+                🍽️ Products
+            </button>
+
+            <button class="sidebar-link" data-page="orders">
+                🧾 Orders
+            </button>
+
+            <button class="sidebar-link" data-page="settings">
+                ⚙️ Settings
+            </button>
+
+            <div class="sidebar-bottom">
+                <a href="index.html">🌐 View Website</a>
+                <button id="logoutButton">🚪 Logout</button>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <header class="admin-header">
+
+                <div>
+                    <h2 id="pageTitle">Dashboard Overview</h2>
+                    <p>Welcome to GREEN CHILLI Admin Panel.</p>
+                </div>
+
+                <div class="admin-profile">
+                    <span>👤</span>
+                    <div>
+                        <strong>Administrator</strong>
+                        <small>Restaurant Owner</small>
+                    </div>
+                </div>
+
+            </header>
+
+
+            <!-- OVERVIEW PAGE -->
+            <section id="overviewPage" class="admin-page">
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <span>🍽️</span>
+                        <p>Total Products</p>
+                        <h3 id="totalProducts">0</h3>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>✅</span>
+                        <p>Available Products</p>
+                        <h3 id="availableProducts">0</h3>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>❌</span>
+                        <p>Out of Stock</p>
+                        <h3 id="outOfStockProducts">0</h3>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>🧾</span>
+                        <p>Total Orders</p>
+                        <h3 id="totalOrders">0</h3>
+                    </div>
+
+                </div>
+
+                <div class="panel-card">
+                    <h3>Quick Actions</h3>
+
+                    <div class="quick-actions">
+                        <button class="action-button" data-page="products">
+                            + Add New Product
+                        </button>
+
+                        <a href="index.html" class="action-button secondary-action">
+                            Open Customer Website →
+                        </a>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- PRODUCTS PAGE -->
+            <section id="productsPage" class="admin-page hidden">
+
+                <div class="page-toolbar">
+                    <div>
+                        <h3>Manage Products</h3>
+                        <p>Add, edit, delete and manage food items.</p>
+                    </div>
+
+                    <button id="addProductButton" class="main-button">
+                        + Add Product
+                    </button>
+                </div>
+
+
+                <!-- ADD / EDIT PRODUCT FORM -->
+                <div id="productFormContainer" class="panel-card hidden">
+
+                    <h3 id="productFormTitle">Add New Product</h3>
+
+                    <form id="productForm">
+
+                        <input type="hidden" id="productId">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label for="productName">Product Name</label>
+                                <input
+                                    type="text"
+                                    id="productName"
+                                    placeholder="Example: Cheese Pizza"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productPrice">Price (₹)</label>
+                                <input
+                                    type="number"
+                                    id="productPrice"
+                                    placeholder="Enter price"
+                                    min="1"
+                                    step="0.01"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productCategory">Category</label>
+                                <select id="productCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Pizza">Pizza</option>
+                                    <option value="Burger">Burger</option>
+                                    <option value="Snacks">Snacks</option>
+                                    <option value="Drinks">Drinks</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productImage">Product Image</label>
+                                <input
+                                    type="file"
+                                    id="productImage"
+                                    accept="image/png,image/jpeg,image/webp"
+                                >
+                                <small>JPG, PNG or WebP images.</small>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productDescription">Description</label>
+                            <textarea
+                                id="productDescription"
+                                placeholder="Write product description..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productStock">Stock Status</label>
+                            <select id="productStock">
+                                <option value="true">Available</option>
+                                <option value="false">Out of Stock</option>
+                            </select>
+                        </div>
+
+                        <div id="imagePreview" class="image-preview"></div>
+
+                        <div class="form-buttons">
+                            <button type="submit" id="saveProductButton" class="main-button">
+                                Save Product
+                            </button>
+
+                            <button type="button" id="cancelProductButton" class="cancel-button">
+                                Cancel
+                            </button>
+                        </div>
+
+                        <p id="productMessage" class="message"></p>
+
+                    </form>
+
+                </div>
+
+
+                <!-- PRODUCT TABLE -->
+                <div class="panel-card table-panel">
+
+                    <div class="table-heading">
+                        <h3>All Products</h3>
+                        <input
+                            type="search"
+                            id="productSearch"
+                            placeholder="Search products..."
+                        >
+                    </div>
+
+                    <div class="table-scroll">
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="productTableBody">
+                                <tr>
+                                    <td colspan="6">Loading products...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ORDERS PAGE -->
+            <section id="ordersPage" class="admin-page hidden">
+
+                <div class="panel-card">
+                    <h3>Customer Orders</h3>
+                    <p>
+                        WhatsApp orders are sent directly to the restaurant
+                        number. They will not automatically appear here.
+                        Order history can be added through the database.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- SETTINGS PAGE -->
+            <section id="settingsPage" class="admin-page hidden">
+
+                <div class="panel-card">
+                    <h3>Restaurant Settings</h3>
+
+                    <p>Restaurant Name: GREEN CHILLI</p>
+                    <p>WhatsApp Number: +91 98350 47077</p>
+                    <p>Payment Method: Cash on Delivery / Pay at Pickup</p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </section>
+
+</body>
+</html>
